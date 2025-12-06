@@ -1,3 +1,4 @@
+import "react-native-get-random-values";
 import { Tabs } from 'expo-router';
 import {  Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider ,SafeAreaView } from 'react-native-safe-area-context';
@@ -10,11 +11,11 @@ import {
   Info
 } from 'lucide-react-native';
 import TabIcon from '../../components/layout/TabIcon';
-import { SolanaProvider } from '@/components/solana/solana-provider';
+import { AppProviders } from '@/utils/app-providers';
 
 export default function TabLayout() {
   return (
-    <SolanaProvider>
+    // <AppProviders>
 
     
     <SafeAreaProvider>
@@ -67,7 +68,7 @@ export default function TabLayout() {
         </Tabs>
       </SafeAreaView>
     </SafeAreaProvider>
-    </SolanaProvider>
+    // </AppProviders>
   );
 }
 

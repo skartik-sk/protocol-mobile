@@ -62,7 +62,7 @@ function getAuthorizationFromAuthorizationResult(
     selectedAccount = previouslySelectedAccount
   }
   return {
-    accounts: authorizationResult.accounts.map(getAccountFromAuthorizedAccount),
+    accounts: authorizationResult.accounts?.map(getAccountFromAuthorizedAccount),
     authToken: authorizationResult.auth_token,
     selectedAccount,
   }
