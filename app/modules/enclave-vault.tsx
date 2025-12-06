@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowRight, ArrowDown, ArrowUp, CheckCircle2, Fingerprint, ScanFace } from 'lucide-react-native';
-import { colors } from '../../constants/colors';
-import DonutChart from '../../components/ui/DonutChart';
+import { ArrowDown, ArrowRight, ArrowUp, CheckCircle2, Fingerprint, ScanFace } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
+import DonutChart from '../../components/ui/DonutChart';
+import Input from '../../components/ui/Input';
+import { colors } from '../../constants/colors';
 
 const EnclaveVaultScreen = () => {
   const [amount, setAmount] = useState('');

@@ -48,19 +48,14 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Archivo-Black.ttf",
-            "./assets/fonts/Archivo-Bold.ttf",
-            "./assets/fonts/JetBrainsMono-Bold.ttf",
-            "./assets/fonts/JetBrainsMono-Medium.ttf",
-            "./assets/fonts/SpaceGrotesk-Regular.ttf",
-            "./assets/fonts/SpaceGrotesk-Bold.ttf"
+            
           ]
         }
       ],
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#fdf0d5"

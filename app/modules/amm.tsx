@@ -1,13 +1,11 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { ArrowDown, Droplets, Settings } from 'lucide-react-native';
-import { colors } from '../../constants/colors';
-import DonutChart from '../../components/ui/DonutChart';
+import React, { useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
-import Card from '../../components/ui/Card';
+import { colors } from '../../constants/colors';
 
 const AMMScreen = () => {
   const [slippage, setSlippage] = useState(0.5);

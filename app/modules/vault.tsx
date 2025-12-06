@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { ArrowRight, ArrowDown, ArrowUp } from 'lucide-react-native';
-import { colors } from '../../constants/colors';
-import DonutChart from '../../components/ui/DonutChart';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
-import Card from '../../components/ui/Card';
 import { WalletUiButtonConnect } from '@/components/solana/wallet-ui-button-connect';
+import { router } from 'expo-router';
+import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import DonutChart from '../../components/ui/DonutChart';
+import Input from '../../components/ui/Input';
+import { colors } from '../../constants/colors';
+import { useAuth } from '@/components/solana/auth-provider';
 
 const ClassicVaultScreen = () => {
   const [mode, setMode] = useState<'deposit' | 'withdraw'>('deposit');
   const [amount, setAmount] = useState('');
-
+const isAuthenticated=useAuth().isAuthenticated;
   const handleBack = () => {
     router.back();
   };
@@ -32,11 +33,13 @@ const ClassicVaultScreen = () => {
             <ArrowRight size={20} color={colors.redAccent} />
             <Text style={styles.backButtonText}>EXIT</Text>
           </TouchableOpacity>
-          <WalletUiButtonConnect/>
+          {isAuthenticated?
           <View style={styles.statusIndicator}>
             <View style={styles.statusDot} />
             <Text style={styles.statusText}>DEV_NET</Text>
-          </View>
+          </View>:
+            <WalletUiButtonConnect/>
+          }
         </View>
 
         {/* Stats Section */}

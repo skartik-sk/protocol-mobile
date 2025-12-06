@@ -2,24 +2,19 @@ import "react-native-get-random-values";
 import { Tabs } from 'expo-router';
 import {  Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider ,SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../../constants/colors';
-import { brutalist } from '../../constants/styles';
+import { colors } from '@/constants/colors';
+import { brutalist } from '@/constants/styles';
 import {
   Home,
   FileText,
   Code,
   Info
 } from 'lucide-react-native';
-import TabIcon from '../../components/layout/TabIcon';
+import TabIcon from '@/components/layout/TabIcon';
 import { AppProviders } from '@/utils/app-providers';
 
 export default function TabLayout() {
   return (
-    // <AppProviders>
-
-    
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}  >
         <Tabs
           screenOptions={{
             tabBarActiveTintColor: colors.redAccent,
@@ -66,9 +61,7 @@ export default function TabLayout() {
             }}
           />
         </Tabs>
-      </SafeAreaView>
-    </SafeAreaProvider>
-    // </AppProviders>
+     
   );
 }
 

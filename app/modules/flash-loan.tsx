@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { ArrowRight, Zap } from 'lucide-react-native';
-import { colors, animations } from '../../constants/colors';
+import React, { useEffect, useState } from 'react';
+import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
+import Input from '../../components/ui/Input';
+import { animations, colors } from '../../constants/colors';
 
 const FlashLoanScreen = () => {
   const [amount, setAmount] = useState('');

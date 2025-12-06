@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowRight, Plus, X, Shield, ArrowRightLeft } from 'lucide-react-native';
-import { colors } from '../../constants/colors';
+import { ArrowRight, ArrowRightLeft, Plus, Shield, X } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
+import { colors } from '../../constants/colors';
 
 interface EscrowData {
   id: number;
