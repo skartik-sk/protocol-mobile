@@ -17,7 +17,8 @@
       "./assets/fonts/SpaceGrotesk-Bold.ttf"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.skartik-sk.solanamobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +28,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.skartik_sk.solanamobile"
     },
     "web": {
       "output": "static",

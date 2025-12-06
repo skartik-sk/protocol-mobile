@@ -10,9 +10,13 @@ import {
   Info
 } from 'lucide-react-native';
 import TabIcon from '../../components/layout/TabIcon';
+import { SolanaProvider } from '@/components/solana/solana-provider';
 
 export default function TabLayout() {
   return (
+    <SolanaProvider>
+
+    
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}  >
         <Tabs
@@ -63,6 +67,7 @@ export default function TabLayout() {
         </Tabs>
       </SafeAreaView>
     </SafeAreaProvider>
+    </SolanaProvider>
   );
 }
 

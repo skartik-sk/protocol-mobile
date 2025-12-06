@@ -8,6 +8,7 @@ import DonutChart from '../../components/ui/DonutChart';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
+import { WalletUiButtonConnect } from '@/components/solana/wallet-ui-button-connect';
 
 const ClassicVaultScreen = () => {
   const [mode, setMode] = useState<'deposit' | 'withdraw'>('deposit');
@@ -31,9 +32,10 @@ const ClassicVaultScreen = () => {
             <ArrowRight size={20} color={colors.redAccent} />
             <Text style={styles.backButtonText}>EXIT</Text>
           </TouchableOpacity>
+          <WalletUiButtonConnect/>
           <View style={styles.statusIndicator}>
             <View style={styles.statusDot} />
-            <Text style={styles.statusText}>MAIN_NET</Text>
+            <Text style={styles.statusText}>DEV_NET</Text>
           </View>
         </View>
 
