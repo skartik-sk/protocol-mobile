@@ -12,6 +12,7 @@ import {
   RefreshCw,
   Zap,
 } from 'lucide-react-native';
+import AppLogo from '@/utils/app-logo';
 
 const HomeScreen = () => {
   const modules = [
@@ -64,6 +65,7 @@ const HomeScreen = () => {
   return (
     
 
+  
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -73,7 +75,9 @@ const HomeScreen = () => {
           </View>
           <View style={styles.titleContainer}>
             <Text style={styles.mainTitle}>
-              PROTO{'\n'}<Text style={styles.accentTitle}>COLS</Text>
+              PROTO{'\n'}<Text style={styles.accentTitle}>COLS
+          {/*<AppLogo/>*/}
+              </Text>
             </Text>
           </View>
         </View>
@@ -115,6 +119,7 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
 
+
   );
 };
 
@@ -125,6 +130,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+        backgroundColor: colors.background,
   },
   header: {
     padding: 24,
@@ -157,6 +163,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'flex-start',
+    justifyContent: 'center',
+    
   },
   mainTitle: {
     fontFamily: 'Archivo_900Black',

@@ -1,8 +1,8 @@
 import { WalletUiButtonConnect } from '@/components/solana/wallet-ui-button-connect';
 import { router } from 'expo-router';
-import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-react-native';
+import { ArrowDown, ArrowRight, ArrowUp, User } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -10,33 +10,162 @@ import DonutChart from '../../components/ui/DonutChart';
 import Input from '../../components/ui/Input';
 import { colors } from '../../constants/colors';
 import { useAuth } from '@/components/solana/auth-provider';
+import { useAuthorization } from '@/components/solana/use-authorization';
+import { ellipsify } from '@/utils/ellipsify';
+import { WalletUiButtonDisconnect } from '@/components/solana/wallet-ui-button-disconnect';
+import { useGetBalance } from '@/hooks/use-get-balance';
+import { useWalletUi } from '@/components/solana/use-wallet-ui';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+
+import { ActivityIndicator } from 'react-native'
+import { lamportsToSol, lamportsToSolDecimal, lamportsToSolDigit } from '@/utils/lamports-to-sol'
+import { getVaultaddress, useDepositVault,useWithdrawVault } from '@/hooks/use-vault';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+
+function UserBalance({ address }: { address: PublicKey }) {
+  const query = useGetBalance({ address })
+
+  return (
+      <View style={styles.statusIndicator}>
+        <Text style={styles.statusText}> { query.isLoading ? <ActivityIndicator /> : query.data ? lamportsToSol(query.data) : '0'} SOL</Text>
+      </View>
+  )
+}
+
+function VaultBalance({ address }: { address: PublicKey }) {
+  const query = useGetBalance({  address: getVaultaddress({address}) })
+
+  return (
+<>
+        <Text style={styles.valueText}> { query.isLoading ? <ActivityIndicator /> : query.data ? lamportsToSolDigit(query.data) : '0'} </Text>
+         <Text style= {styles.valueDecimal}>.{query.isLoading ? <ActivityIndicator /> : query.data ? lamportsToSolDecimal(query.data) : '0'}</Text>
+</>
+  )
+}
+
+function VaultStats({ address }: { address: PublicKey }) {
+  const userBalanceQuery = useGetBalance({ address })
+  const vaultBalanceQuery = useGetBalance({ address: getVaultaddress({ address }) })
+
+  const userBalance = userBalanceQuery.data || 0
+  const vaultBalance = vaultBalanceQuery.data || 0
+
+  const userBalanceSOL = userBalance / LAMPORTS_PER_SOL
+  const vaultBalanceSOL = vaultBalance / LAMPORTS_PER_SOL
+
+  if (userBalanceQuery.isLoading || vaultBalanceQuery.isLoading) {
+    return (
+      <View style={styles.chartContainer}>
+        <ActivityIndicator size="large" color={colors.blueDark} />
+      </View>
+    )
+  }
+
+  return (
+    <View style={styles.chartContainer}>
+      <DonutChart
+        data={{ 
+          in: vaultBalanceSOL,   // Blue - Locked in vault
+          out: userBalanceSOL    // Red - Available in wallet
+        }}
+        label="DISTRIBUTION"
+      />
+    </View>
+  )
+}
 
 const ClassicVaultScreen = () => {
   const [mode, setMode] = useState<'deposit' | 'withdraw'>('deposit');
   const [amount, setAmount] = useState('');
-const isAuthenticated=useAuth().isAuthenticated;
+  const {isAuthenticated,signOut}=useAuth();
+  const { account } = useWalletUi()
+  const depositVault = useDepositVault()
+  const withdrawVault = useWithdrawVault()
+
+  const { selectedAccount } = useAuthorization()
+  
+  // Get balances for MAX button
+  const userBalanceQuery = useGetBalance({ address: account?.publicKey! })
+  const vaultBalanceQuery = useGetBalance({ 
+    address: account ? getVaultaddress({ address: account.publicKey }) : new PublicKey('11111111111111111111111111111111')
+  })
+
   const handleBack = () => {
     router.back();
   };
 
-  const handleSubmit = () => {
-    // Handle submit logic here
-    console.log(`${mode} amount:`, amount);
+  // Handle MAX button click
+  const handleMaxClick = () => {
+    if (!account) return;
+
+    if (mode === 'deposit') {
+      // For INJECT: use user wallet balance (minus small fee for transaction)
+      const userBalance = userBalanceQuery.data || 0;
+      const maxDeposit = Math.max(0, (userBalance / LAMPORTS_PER_SOL) - 0.001); // Leave 0.001 SOL for fees
+      setAmount(maxDeposit.toFixed(6).replace(/\.?0+$/, '')); // Remove trailing zeros
+    } else {
+      // For EJECT: use vault balance
+      const vaultBalance = vaultBalanceQuery.data || 0;
+      const maxWithdraw = vaultBalance / LAMPORTS_PER_SOL;
+      setAmount(maxWithdraw.toFixed(6).replace(/\.?0+$/, '')); // Remove trailing zeros
+    }
   };
 
+  const handleSubmit = () => {
+    if (!account) return;
+    if (!selectedAccount) return;
+    if (!amount) return;
+    
+    if (mode === 'deposit') {
+      depositVault
+          .mutateAsync({amount:Number(amount)})
+          .then(() => {
+            console.log(`Deposited ${amount} SOL to vault`)
+            setAmount(''); // Clear input after success
+          })
+          .catch((err) => console.log(`Error depositing`, err))
+    } else {
+      withdrawVault
+           .mutateAsync({amount:Number(amount)})
+           .then(() => {
+             console.log(`Withdrew ${amount} SOL from vault`)
+             setAmount(''); // Clear input after success
+           })
+           .catch((err) => console.log(`Error withdrawing`, err))
+    }
+  }
+
+  const { disconnect } = useWalletUi()
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    <KeyboardAwareScrollView 
+           style={styles.scrollView} 
+           showsVerticalScrollIndicator={false}
+           bottomOffset={Platform.OS === 'ios' ? 100 : 0}
+           contentContainerStyle={styles.scrollContent}
+         >
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <ArrowRight size={20} color={colors.redAccent} />
+            <ArrowRight size={20} color={colors.redAccent} style={styles.backArrow} />
             <Text style={styles.backButtonText}>EXIT</Text>
           </TouchableOpacity>
+        
           {isAuthenticated?
+            <View >
+              
           <View style={styles.statusIndicator}>
+            
+           {account?
+            <Pressable onPress={() => disconnect()}>
+              <UserBalance address={account.publicKey}/> 
+            </Pressable> : null} 
             <View style={styles.statusDot} />
             <Text style={styles.statusText}>DEV_NET</Text>
+            </View>
+            <View style={styles.statusIndicator}>
+              <Text style={styles.statusText}> {ellipsify(selectedAccount?.publicKey.toString())}</Text>
+            </View>
           </View>:
             <WalletUiButtonConnect/>
           }
@@ -46,17 +175,14 @@ const isAuthenticated=useAuth().isAuthenticated;
         <View style={styles.statsSection}>
           <View style={styles.valueContainer}>
             <Text style={styles.valueLabel}>TOTAL_VALUE_LOCKED</Text>
-            <Text style={styles.valueText}>
-              4,280<Text style={styles.valueDecimal}>.55</Text>
-            </Text>
-            <Text style={styles.valueUnit}>SOL / USDC</Text>
+            {account?<VaultBalance address={account.publicKey}/> : null} 
+            <Text style={styles.valueUnit}>SOL </Text>
           </View>
-          <View style={styles.chartContainer}>
-            <DonutChart
-              data={{ in: 6500, out: 2220 }}
-              label="NET FLOW"
-            />
-          </View>
+          {account ? <VaultStats address={account.publicKey} /> : (
+            <View style={styles.chartContainer}>
+              <DonutChart data={{ in: 0, out: 0 }} label="CONNECT" />
+            </View>
+          )}
         </View>
 
         {/* Main Interface */}
@@ -105,8 +231,22 @@ const isAuthenticated=useAuth().isAuthenticated;
               value={amount}
               onChangeText={setAmount}
               rightLabel="MAX"
-              keyboardType="number-pad"
+              onRightLabelPress={handleMaxClick}
+              keyboardType="decimal-pad"
             />
+
+            {/* Show balance info */}
+            <View style={styles.balanceInfo}>
+              <Text style={styles.balanceLabel}>
+                {mode === 'deposit' ? 'Available in wallet:' : 'Available in vault:'}
+              </Text>
+              <Text style={styles.balanceValue}>
+                {mode === 'deposit' 
+                  ? `${((userBalanceQuery.data || 0) / LAMPORTS_PER_SOL).toFixed(4)} SOL`
+                  : `${((vaultBalanceQuery.data || 0) / LAMPORTS_PER_SOL).toFixed(4)} SOL`
+                }
+              </Text>
+            </View>
 
             <Button
               title={mode === 'deposit' ? 'CONFIRM DEPOSIT' : 'INITIATE WITHDRAWAL'}
@@ -115,28 +255,35 @@ const isAuthenticated=useAuth().isAuthenticated;
               uppercase={true}
               tracking="widest"
               onPress={handleSubmit}
+              disabled={depositVault.isPending || withdrawVault.isPending}
             />
           </View>
         </Card>
-      </ScrollView>
-    </SafeAreaView>
+         </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   scrollView: {
+    backgroundColor: colors.background,
     flex: 1,
   },
+  scrollContent: {
+     flexGrow: 1,
+     paddingBottom: 20,
+   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 24,
+    padding: 12,
     marginBottom: 24,
+  },
+  backArrow: {
+    transform: [{ rotate: '180deg' }],
   },
   backButton: {
     flexDirection: 'row',
@@ -158,6 +305,7 @@ const styles = StyleSheet.create({
   statusIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     gap: 8,
   },
   statusDot: {
@@ -221,7 +369,7 @@ const styles = StyleSheet.create({
   },
   interfaceCard: {
     marginHorizontal: 24,
-    marginBottom: 100, // Space for bottom navigation
+    marginBottom: 10,
   },
   tabsContainer: {
     flexDirection: 'row',
@@ -259,7 +407,25 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     padding: 24,
-    gap: 24,
+    gap: 16,
+  },
+  balanceInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  balanceLabel: {
+    fontFamily: 'monospace',
+    fontSize: 11,
+    color: colors.text,
+    opacity: 0.6,
+  },
+  balanceValue: {
+    fontFamily: 'monospace',
+    fontSize: 11,
+    color: colors.blueDark,
+    fontWeight: '700',
   },
 });
 

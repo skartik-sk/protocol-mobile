@@ -1,0 +1,21 @@
+
+  <svg width={60} height={60} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Outer Hexagon Background */}
+    <path d="M50 5 L93 28 V72 L50 95 L7 72 V28 Z" fill="#fdf0d5" stroke="#003049" strokeWidth="4" />
+    
+    {/* Internal Structure (Cube-like) */}
+    <path d="M50 50 L93 28" stroke="#003049" strokeWidth="3" />
+    <path d="M50 50 L7 28" stroke="#003049" strokeWidth="3" />
+    <path d="M50 50 L50 95" stroke="#003049" strokeWidth="3" />
+    
+    {/* The Core (Atomic Red) */}
+    <circle cx="50" cy="50" r="12" fill="#c1121f" stroke="#003049" strokeWidth="2" />
+    
+    {/* Orbital Nodes */}
+    <circle cx="93" cy="28" r="4" fill="#003049" />
+    <circle cx="7" cy="28" r="4" fill="#003049" />
+    <circle cx="50" cy="95" r="4" fill="#003049" />
+    
+    {/* Decorative Tech Marks */}
+    <path d="M35 15 L65 15" stroke="#669bbc" strokeWidth="2" strokeDasharray="4 2" />
+  </svg>

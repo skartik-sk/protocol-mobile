@@ -15,6 +15,9 @@ import { AppProviders } from '@/utils/app-providers';
 
 export default function TabLayout() {
   return (
+
+        
+      
         <Tabs
           screenOptions={{
             tabBarActiveTintColor: colors.redAccent,
@@ -61,7 +64,7 @@ export default function TabLayout() {
             }}
           />
         </Tabs>
-     
+      
   );
 }
 

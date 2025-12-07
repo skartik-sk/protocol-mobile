@@ -15,7 +15,7 @@ const AboutScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+   
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -102,24 +102,25 @@ const AboutScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-    position: 'relative',
+   
   },
   scrollView: {
     flex: 1,
+    backgroundColor: colors.background,
+    position: 'relative',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
-    padding: 24,
+    padding: 12,
     borderBottomWidth: 4,
     borderBottomColor: colors.border,
     backgroundColor: colors.background,

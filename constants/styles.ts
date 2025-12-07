@@ -126,7 +126,7 @@ export const brutalist = StyleSheet.create({
   header: {
     borderBottomWidth: 4,
     borderBottomColor: colors.text,
-    padding: 24,
+    padding: 12,
     backgroundColor: colors.background,
   },
 

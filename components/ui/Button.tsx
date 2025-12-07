@@ -67,19 +67,21 @@ const Button: React.FC<ButtonProps> = ({
     return baseStyle;
   };
 
-  const getTextStyle = (): TextStyle => {
+    const getTextStyle = (): TextStyle => {
     const baseStyle: TextStyle = {
       ...styles.buttonText,
       ...styles[`${size}Text`],
     };
-
-    // Set text color based on button variant for proper contrast
-    if (variant === 'primary' || variant === 'accentBackground') {
-      baseStyle.color = colors.background; // White text on dark backgrounds
-    } else {
-      baseStyle.color = colors.text; // Dark text on light backgrounds
-    }
-
+  
+    // Set text color based on button variant and pressed state
+   if (pressed && variant !== 'accentBackground') {
+    baseStyle.color = colors.text;
+  } else if (variant === 'primary' || variant === 'accentBackground') {
+    baseStyle.color = colors.background;
+  } else {
+    baseStyle.color = colors.text;
+  }
+  
     if (uppercase) {
       baseStyle.textTransform = 'uppercase';
       if (tracking === 'wider') {
@@ -90,11 +92,11 @@ const Button: React.FC<ButtonProps> = ({
         baseStyle.letterSpacing = 0.1;
       }
     }
-
+  
     if (disabled) {
       baseStyle.opacity = 0.5;
     }
-
+  
     return baseStyle;
   };
 

@@ -7,7 +7,7 @@ import Card from '../../components/ui/Card';
 
 const DocsScreen = () => {
   return (
-    <SafeAreaView style={styles.container}>
+
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -73,17 +73,15 @@ const DocsScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
   scrollView: {
     flex: 1,
+    backgroundColor: colors.background,
+
   },
   header: {
     flexDirection: 'row',

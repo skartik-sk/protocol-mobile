@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { colors } from '../../constants/colors';
-import { globalStyles } from '../../styles/global';
 
 interface DonutChartProps {
   data: {
@@ -27,6 +26,16 @@ const DonutChart: React.FC<DonutChartProps> = ({
   const centerX = size / 2;
   const centerY = size / 2;
 
+  // Calculate ratio properly
+  const getRatio = () => {
+    if (total === 0) return '0.0';
+    if (data.out === 0) return '∞'; // Infinity if all in vault
+    const ratio = data.in / data.out;
+    if (ratio >= 10) return ratio.toFixed(0); // Show whole numbers for large ratios
+    if (ratio >= 1) return ratio.toFixed(1);   // Show 1 decimal for ratios >= 1
+    return ratio.toFixed(2);                    // Show 2 decimals for small ratios
+  };
+
   return (
     <View style={styles.container}>
       {/* Background SVG for the donut chart */}
@@ -42,7 +51,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
           opacity={0.1}
         />
 
-        {/* In flow segment */}
+        {/* In flow segment (Vault - Blue) */}
         <Circle
           cx={centerX}
           cy={centerY}
@@ -55,7 +64,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
           strokeLinecap="round"
         />
 
-        {/* Out flow segment (red) */}
+        {/* Out flow segment (Wallet - Red) */}
         <Circle
           cx={centerX}
           cy={centerY}
@@ -72,8 +81,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
       {/* Center text overlay */}
       <View style={styles.centerText}>
         <Text style={styles.labelText}>{label}</Text>
-        <Text style={styles.ratioText}>
-          +{total > 0 ? (data.in / data.out).toFixed(1) : '0.0'}x
+        <Text style={styles.ratioText}>{getRatio()}x</Text>
+        <Text style={styles.subText}>
+          {data.in.toFixed(1)} / {data.out.toFixed(1)}
         </Text>
       </View>
     </View>
@@ -87,7 +97,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   svg: {
-    // Rotating -90deg for the donut chart
     transform: [{ rotate: '-90deg' }],
   },
   centerText: {
@@ -97,15 +106,23 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontFamily: 'monospace',
-    fontSize: 10,
+    fontSize: 9,
     color: colors.blueDark,
     opacity: 0.6,
+    textTransform: 'uppercase',
   },
   ratioText: {
     fontFamily: 'SpaceGrotesk_700Bold',
     fontSize: 18,
     color: colors.blueDark,
     fontWeight: '700',
+  },
+  subText: {
+    fontFamily: 'monospace',
+    fontSize: 8,
+    color: colors.blueDark,
+    opacity: 0.5,
+    marginTop: 2,
   },
 });
 

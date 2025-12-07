@@ -12,24 +12,30 @@ import {
 } from 'lucide-react-native';
 import TabIcon from '../components/layout/TabIcon';
 import { AppProviders } from '@/utils/app-providers';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 export default function TabLayout() {
   return (
      <AppProviders>
 
-    
+     <KeyboardProvider>
+       
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}  >
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="modules/vault" />
-        <Stack.Screen name="modules/amm" />
-        <Stack.Screen name="modules/escrow" />
-        <Stack.Screen name="modules/flash-loan" />
-        <Stack.Screen name="modules/enclave-vault" />
-      </Stack>
+
+      <SafeAreaView style={styles.container}>
+        
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="modules/vault" />
+          <Stack.Screen name="modules/amm" />
+          <Stack.Screen name="modules/escrow" />
+          <Stack.Screen name="modules/flash-loan" />
+          <Stack.Screen name="modules/enclave-vault" />
+        </Stack>
+
       </SafeAreaView>
     </SafeAreaProvider>
+     </KeyboardProvider>
      </AppProviders>
   );
 }
