@@ -186,7 +186,8 @@ Never use with real funds on mainnet.
 
 <br/>
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<img width="3712" height="1152" alt="Gemini_Generated_Image_fhncjafhncjafhnc-min" src="https://github.com/user-attachments/assets/45b70d46-31fa-4699-b2d8-efbecfa922ed" />
+
 
 <div align="center">
 
